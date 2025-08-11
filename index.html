@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Максим — начинающий разработчик</title>
+  <meta name="description" content="Портфолио начинающего разработчика Максим — проекты на C++, веб, алгоритмы." />
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <!-- Canvas для кровавых линий -->
+  <canvas id="bloodCanvas"></canvas>
+  
+  <!-- Canvas для частиц -->
+  <canvas id="bg" aria-hidden="true"></canvas>
+
+  <div class="wrap">
+    <header class="site">
+      <div class="brand">
+        <img 
+          class="logo" 
+          src="https://i.pinimg.com/originals/a4/8c/cd/a48ccdcbe732427c4b5f6dfae4b3ff59.gif" 
+          alt="Аватар Максим"
+          loading="lazy"
+        >
+        <div>
+          <h1>Максим</h1>
+          <div class="role">Начинающий разработчик</div>
+        </div>
+      </div>
+
+      <nav class="nav">
+        <a href="#projects">Проекты</a>
+        <a href="#about">Обо мне</a>
+        <a href="#contact">Контакты</a>
+        <a class="btn" href="mailto:lostdead@svaiol.ru">Написать</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero" id="home">
+        <div class="hero-left">
+          <h2>Привет — я <span class="accent">Максим</span>.</h2>
+          <p class="lead">Я начинающий разработчик. Изучаю C++, веб-технологии и решаю алгоритмические задачи. Работаю над небольшими проектами и набираюсь опыта.</p>
+          <div class="hero-ctas">
+            <a class="btn" href="#projects">Мои проекты</a>
+            <a class="muted" href="#" title="Резюме (placeholder)">Скачать резюме</a>
+          </div>
+        </div>
+      </section>
+
+      <section id="projects">
+        <h3>Проекты</h3>
+        <div class="projects-grid">
+          <article class="project-card">
+            <h4>Чат на C++</h4>
+            <p>Прототип WebSocket-сервера на Boost.Beast и простой веб-клиент.</p>
+          </article>
+
+          <article class="project-card">
+            <h4>Лендинги</h4>
+            <p>Адаптивные лендинги и мини-приложения на чистом JS и Canvas.</p>
+          </article>
+
+          <article class="project-card">
+            <h4>Алгоритмы</h4>
+            <p>Решения задач на C++: структуры данных и алгоритмы.</p>
+          </article>
+        </div>
+      </section>
+
+      <section id="about">
+        <h3>Обо мне</h3>
+        <div class="card">
+          <p>Я только начинаю, но люблю вникать в детали. Сейчас учу modern C++ (C++17/20), Boost.Asio и фронтенд. Готов к небольшим проектам и коллаборациям.</p>
+        </div>
+      </section>
+
+      <section id="contact">
+        <h3>Контакты</h3>
+        <div class="contact">
+          <div class="card">
+            <p><strong>Email:</strong> <a href="mailto:lostdead@svaiol.ru">lostdead@svaiol.ru</a></p>
+            <p><strong>GitHub:</strong> <a href="https://github.com/LostDit" target="_blank" rel="noopener">https://github.com/LostDit</a></p>
+          </div>
+          <div class="card">
+            <p>Напишите — отвечу по почте или через GitHub.</p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>© 2025 Максим — начинающий разработчик</footer>
+  </div>
+
+  <!-- Скрипт кровавых линий -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const canvas = document.getElementById('bloodCanvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      
+      // Параметры крови
+      const BLOOD_COLOR = '#8a0303';
+      const BLOOD_DROP_COLOR = '#d10000';
+      const LINE_WIDTH = 2;
+      const DROP_RADIUS = 2;
+      const LINE_COUNT = 40;
+      
+      // Текущие линии
+      let bloodLines = [];
+      
+      function resizeCanvas() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        generateBloodLines();
+        drawBloodEffect();
+      }
+      
+      function generateBloodLines() {
+        bloodLines = [];
+        const width = canvas.width;
+        const height = canvas.height;
+        
+        for (let i = 0; i < LINE_COUNT; i++) {
+          const startX = Math.random() * width;
+          const startY = -20;
+          const endX = startX + (Math.random() - 0.5) * 300;
+          const endY = height + 20;
+          
+          // Контрольные точки для кривой
+          const cp1x = startX + (Math.random() - 0.5) * 400;
+          const cp1y = startY + height * 0.3;
+          const cp2x = startX + (Math.random() - 0.5) * 400;
+          const cp2y = startY + height * 0.7;
+          
+          // Капли вдоль линии
+          const drops = [];
+          for (let j = 0; j < 8; j++) {
+            const progress = Math.random();
+            drops.push({
+              progress,
+              size: 2 + Math.random() * 3,
+              offsetX: (Math.random() - 0.5) * 10,
+              offsetY: (Math.random() - 0.5) * 10
+            });
+          }
+          
+          bloodLines.push({
+            startX, startY, endX, endY, 
+            cp1x, cp1y, cp2x, cp2y,
+            drops,
+            thickness: 1.5 + Math.random() * 1.5
+          });
+        }
+      }
+      
+      function drawBloodEffect() {
+        // Очищаем canvas
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        // Рисуем черный фон
+        ctx.fillStyle = '#000000';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        
+        // Рисуем линии крови
+        ctx.strokeStyle = BLOOD_COLOR;
+        ctx.lineWidth = LINE_WIDTH;
+        ctx.lineCap = 'round';
+        
+        bloodLines.forEach(line => {
+          ctx.beginPath();
+          ctx.moveTo(line.startX, line.startY);
+          ctx.bezierCurveTo(
+            line.cp1x, line.cp1y,
+            line.cp2x, line.cp2y,
+            line.endX, line.endY
+          );
+          ctx.stroke();
+          
+          // Рисуем капли
+          line.drops.forEach(drop => {
+            const t = drop.progress;
+            // Формула Безье для позиции капли
+            const x = Math.pow(1 - t, 3) * line.startX + 
+                      3 * Math.pow(1 - t, 2) * t * line.cp1x + 
+                      3 * (1 - t) * Math.pow(t, 2) * line.cp2x + 
+                      Math.pow(t, 3) * line.endX;
+            const y = Math.pow(1 - t, 3) * line.startY + 
+                      3 * Math.pow(1 - t, 2) * t * line.cp1y + 
+                      3 * (1 - t) * Math.pow(t, 2) * line.cp2y + 
+                      Math.pow(t, 3) * line.endY;
+            
+            drawBloodDrop(ctx, x + drop.offsetX, y + drop.offsetY, drop.size);
+          });
+        });
+      }
+      
+      function drawBloodDrop(ctx, x, y, size) {
+        ctx.fillStyle = BLOOD_DROP_COLOR;
+        ctx.beginPath();
+        ctx.ellipse(x, y, size, size * 1.5, Math.PI/4, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      
+      // Инициализация
+      window.addEventListener('resize', resizeCanvas);
+      resizeCanvas();
+    });
+  </script>
+  
+  <!-- Скрипт фона (частицы) -->
+  <script src="js/background.js"></script>
+  <!-- Основной скрипт сайта -->
+  <script src="js/app.js"></script>
+</body>
+</html>
