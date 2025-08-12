@@ -1,8 +1,8 @@
-// js/app.js — smooth scroll, reveal on scroll, safe menu toggle
+// js/app.js
 (function () {
   'use strict';
 
-  // Плавная прокрутка
+  // Smooth scrolling
   function smoothScrollTo(targetEl, offset = 72, duration = 520) {
     if (!targetEl) return;
     const startY = window.scrollY || window.pageYOffset;
@@ -20,7 +20,7 @@
     requestAnimationFrame(step);
   }
 
-  // Смягчающая привязка для ссылок
+  // Smooth anchor navigation
   function initSmoothAnchors() {
     document.querySelectorAll('a[href^="#"]').forEach(a => {
       a.addEventListener('click', (e) => {
@@ -34,14 +34,13 @@
     });
   }
 
-  // Reveal on scroll via IntersectionObserver
+  // Reveal on scroll
   function initRevealOnScroll() {
     const opts = { threshold: 0.12 };
     const io = new IntersectionObserver((entries) => {
       entries.forEach(en => {
         if (en.isIntersecting) {
           en.target.classList.add('inview');
-          // unobserve to preserve performance
           io.unobserve(en.target);
         }
       });
@@ -52,17 +51,21 @@
     });
   }
 
-  // Safe menu-toggle
+  // Mobile menu toggle
   const menuToggle = document.querySelector('.menu-toggle');
   if (menuToggle) {
     menuToggle.addEventListener('click', function() {
       this.classList.toggle('active');
       const nav = document.querySelector('.nav');
       if (nav) nav.classList.toggle('active');
+      
+      // Toggle aria-expanded
+      const isExpanded = this.getAttribute('aria-expanded') === 'true';
+      this.setAttribute('aria-expanded', !isExpanded);
     });
   }
 
-  // Accessibility helper
+  // Accessibility features
   function initAccessibility() {
     let usingKeyboard = false;
     window.addEventListener('keydown', (e) => {
@@ -75,7 +78,7 @@
     });
   }
 
-  // init
+  // Initialize all components
   function init() {
     initSmoothAnchors();
     initRevealOnScroll();

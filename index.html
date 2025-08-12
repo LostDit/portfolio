@@ -9,74 +9,17 @@
   <!-- highlight.js theme -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css">
 
-  <!-- main styles (относительный путь — обязательно) -->
+  <!-- main styles -->
   <link rel="stylesheet" href="./css/styles.css">
-  <style>
-    /* Небольшые локальные стили для слайдера (если в основном CSS нет) */
-    .slider {
-      position: relative;
-      max-width: 1100px;
-      margin: 18px auto 36px;
-      padding: 18px;
-      overflow: visible;
-    }
-    .slides {
-      display: flex;
-      gap: 18px;
-      transition: transform 420ms cubic-bezier(.2,.9,.2,1);
-      will-change: transform;
-    }
-    .slide {
-      min-width: 100%;
-      box-sizing: border-box;
-      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.03));
-      border-radius: 12px;
-      padding: 20px;
-      box-shadow: 0 10px 36px rgba(0,0,0,0.45);
-    }
-    .slide h3 { margin-top: 0; margin-bottom: 8px; color: var(--accent2); }
-    .slide p, .slide ul { color: var(--text); margin: 0 0 8px; }
-    .slider-controls {
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:8px;
-      margin-top:12px;
-    }
-    .slider-nav {
-      display:flex;
-      gap:8px;
-      align-items:center;
-    }
-    .slider-dot {
-      width:10px; height:10px; border-radius:50%;
-      background: rgba(255,255,255,0.08);
-      border: 1px solid rgba(255,255,255,0.03);
-      cursor:pointer;
-    }
-    .slider-dot.active { background: var(--accent); box-shadow: 0 6px 18px rgba(30,144,255,0.12); }
-    .slider-arrow {
-      background: rgba(255,255,255,0.03);
-      border: 1px solid rgba(255,255,255,0.04);
-      color: var(--text);
-      padding: 8px 12px;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight:700;
-    }
-    @media (max-width:900px) {
-      .slide { padding: 14px; }
-    }
-  </style>
 </head>
 <body>
   <!-- Canvas для кровавых линий -->
   <canvas id="bloodCanvas" aria-hidden="true"></canvas>
 
-  <!-- Canvas для анимированного фонa -->
+  <!-- Canvas для анимированного фона -->
   <canvas id="bg" aria-hidden="true"></canvas>
 
-  <!-- Canvas для игры (показывается по клику/Space) -->
+  <!-- Canvas для игры -->
   <canvas id="gameCanvas" aria-hidden="true"></canvas>
 
   <div class="wrap">
@@ -124,9 +67,9 @@
         </div>
       </section>
 
-      <!-- Presentation slider (слайды-презентация: можно вставить в любом месте) -->
+      <!-- Presentation slider -->
       <section id="presentation" class="slider" aria-label="Презентация">
-        <div class="slides-wrapper" style="overflow:hidden;">
+        <div class="slides-wrapper">
           <div class="slides" data-index="0">
             <article class="slide">
               <h3>Введение</h3>
@@ -188,10 +131,10 @@
         <div class="slider-controls">
           <div class="slider-nav" aria-hidden="false">
             <button class="slider-arrow" data-action="prev" aria-label="Previous">◀</button>
-            <div id="slider-dots" style="display:flex; gap:8px; align-items:center;"></div>
+            <div id="slider-dots" class="slider-dots" aria-hidden="false"></div>
             <button class="slider-arrow" data-action="next" aria-label="Next">▶</button>
           </div>
-          <div style="color:var(--muted); font-size:0.95rem;">Автоплей • Нажмите стрелки для навигации</div>
+          <div class="slider-caption">Автоплей • Нажмите стрелки для навигации</div>
         </div>
       </section>
 
@@ -315,7 +258,6 @@
           </div>
 
           <div class="code-body">
-            <!-- Preview area (подсвеченный) -->
             <pre class="code-preview"><code class="language-cpp">
 // Пример: простой TCP-сервер (фрагмент)
 #include &lt;boost/asio.hpp&gt;
@@ -332,7 +274,6 @@ int main() {
 }
             </code></pre>
 
-            <!-- Edit area (textarea) -->
             <textarea class="code-editor-textarea" spellcheck="false" style="display:none;"></textarea>
           </div>
         </div>
@@ -346,7 +287,10 @@ int main() {
       <section id="about">
         <h3>Обо мне</h3>
         <div class="card">
-          <p>Работаю с сетевыми приложениями и сокетами: Qt и Boost.Asio; активно пишу на C++ (ISO C++14/17/23). Немного фронтенда — этот сайт написан на чистом JS и Canvas.</p>
+          <p>
+            Работаю с сетевыми приложениями и сокетами: Qt и Boost.Asio; активно пишу на C++ (ISO C++14/17/23).
+            Немного фронтенда — этот сайт написан на чистом JS и Canvas. Сейчас углубляюсь в алгоритмизацию и структуры данных.
+          </p>
 
           <h4>Коротко о навыках</h4>
           <ul>
@@ -356,18 +300,31 @@ int main() {
             <li><strong>Фокус:</strong> асинхронность, масштабирование, надёжность, алгоритмы и структуры данных.</li>
           </ul>
 
+          <h4>Что я обычно проектирую / реализую (пример функционала)</h4>
+          <ul>
+            <li><strong>Асинхронный сервер на Boost.Asio:</strong> обработка тысяч соединений с использованием io_context, strand’ов, эффективной очереди задач и backpressure.</li>
+            <li><strong>Протоколы и сериализация:</strong> бинарные/текстовые форматы, protobuf и compact-форматы; framing / length-prefix / message boundary handling.</li>
+            <li><strong>Надёжность и наблюдаемость:</strong> heartbeat, reconnect/ exponential backoff, метрики (Prometheus), логирование, health checks.</li>
+            <li><strong>Безопасность:</strong> TLS интеграция (OpenSSL), валидация входящих сообщений, ограничение скорости и защита от DoS-паттернов.</li>
+            <li><strong>Интеграция с GUI:</strong> клиентские приложения на Qt, где сетевой код аккуратно интегрирован со loop UI (через сигналы/слоты) или через отдельный поток/слой.</li>
+            <li><strong>Фронтенд-составляющая:</strong> интерактивные визуализации на Canvas, легковесные SPA на чистом JS, встраиваемые блоки кода (редактируемые) для демонстрации алгоритмов.</li>
+          </ul>
+
           <h4>Принципы работы сокетов — кратко</h4>
           <ol>
-            <li><strong>Сокет</strong> — это дескриптор для обмена байтами между процессами; TCP даёт надёжность и порядок, UDP — быструю передачу пакетов.</li>
+            <li><strong>Сокет</strong> — дескриптор для обмена байтами; TCP гарантирует порядок и доставку, UDP даёт минимальную задержку.</li>
             <li><strong>Жизненный цикл TCP:</strong> socket → bind/listen → accept (сервер) / connect (клиент) → read/write → shutdown/close.</li>
-            <li><strong>Модель I/O:</strong> блокирующий vs неблокирующий; для большого числа соединений используют select/poll → epoll/kqueue; в архитектуре — Reactor/Proactor.</li>
-            <li><strong>Асинхронность:</strong> Boost.Asio предоставляет io_context и async_* операции; Qt использует сигналы/слоты для удобной интеграции с UI.</li>
-            <li><strong>Надёжность:</strong> таймауты, heartbeat, backoff/reconnect, логирование и мониторинг — важны для продакшена.</li>
+            <li><strong>Модель I/O:</strong> блокирующий vs неблокирующий; для масштаба — select/poll → epoll/kqueue; архитектурно — Reactor/Proactor.</li>
+            <li><strong>Асинхронность:</strong> Boost.Asio: io_context, async_read/async_write, handlers/strands; Qt: сигналы/слоты и QTcpSocket для UI-клиентов.</li>
+            <li><strong>Продакшен-практики:</strong> таймауты, контроль состояния соединений, гранулированные ретраи, мониторинг, тестирование при потере пакетов/высокой RTT.</li>
           </ol>
 
-          <p>В проектах я проектирую клиент-серверную логику, оптимизирую производительность и работаю с сериализацией/безопасностью передачи данных.</p>
+          <p>
+            В проектах я проектирую клиент-серверную логику, оптимизирую latency/throughput, внедряю надёжные механизмы реконнекта и сериализации, а также делаю удобные инструменты для отладки и наблюдаемости системы.
+          </p>
         </div>
       </section>
+
 
       <section id="contact">
         <h3>Контакты</h3>
@@ -388,90 +345,15 @@ int main() {
     </footer>
   </div>
 
-  <!-- Скрипты (относительные пути) -->
+  <!-- Скрипты -->
   <script src="./js/app.js" defer></script>
   <script src="./js/projects.js" defer></script>
-  <script src="./js/codeblock.js" defer></script>
+  <script src="./js/code-editor.js" defer></script>
   <script src="./js/background.js" defer></script>
   <script src="./js/game.js" defer></script>
+  <script src="./js/slider.js" defer></script>
 
-  <!-- highlight.js и редактор кода -->
+  <!-- highlight.js -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js" defer></script>
-  <script>window.addEventListener('DOMContentLoaded', ()=>{ if(window.hljs) hljs.highlightAll(); });</script>
-  <script src="./js/code-editor.js" defer></script>
-
-  <!-- slider init (легкий скрипт, управляет слайдером-презентацией) -->
-  <script>
-    (function(){
-      const slidesEl = document.querySelector('.slides');
-      if (!slidesEl) return;
-      const slides = Array.from(slidesEl.children);
-      const dotsContainer = document.getElementById('slider-dots');
-      let index = 0;
-      const total = slides.length;
-      let width = slidesEl.parentElement.clientWidth;
-      let autoplay = true;
-      let timer = null;
-      const AUTOPLAY_MS = 4500;
-
-      function buildDots(){
-        for (let i=0;i<total;i++){
-          const d = document.createElement('div');
-          d.className = 'slider-dot' + (i===0 ? ' active' : '');
-          d.dataset.i = i;
-          d.addEventListener('click', () => { goTo(parseInt(d.dataset.i)); });
-          dotsContainer.appendChild(d);
-        }
-      }
-
-      function update(){
-        const offset = -index * width;
-        slidesEl.style.transform = `translateX(${offset}px)`;
-        Array.from(dotsContainer.children).forEach((d,i)=> d.classList.toggle('active', i===index));
-      }
-
-      function goTo(i){
-        index = (i + total) % total;
-        update();
-        restartAutoplay();
-      }
-      function next(){ goTo(index+1); }
-      function prev(){ goTo(index-1); }
-
-      function restartAutoplay(){
-        if (!autoplay) return;
-        if (timer) clearInterval(timer);
-        timer = setInterval(next, AUTOPLAY_MS);
-      }
-
-      // controls
-      document.querySelectorAll('[data-action="next"]').forEach(b => b.addEventListener('click', next));
-      document.querySelectorAll('[data-action="prev"]').forEach(b => b.addEventListener('click', prev));
-
-      // responsive: recalc width on resize
-      window.addEventListener('resize', () => {
-        width = slidesEl.parentElement.clientWidth;
-        update();
-      });
-
-      // pause on hover
-      const slider = document.querySelector('.slider');
-      slider.addEventListener('mouseenter', () => { autoplay = false; if (timer) clearInterval(timer); });
-      slider.addEventListener('mouseleave', () => { autoplay = true; restartAutoplay(); });
-
-      // keyboard
-      window.addEventListener('keydown', (e) => {
-        if (e.key === 'ArrowLeft') prev();
-        if (e.key === 'ArrowRight') next();
-      });
-
-      // init
-      buildDots();
-      // set container width: ensure each slide fills the wrapper
-      slides.forEach(s => s.style.minWidth = slidesEl.parentElement.clientWidth + 'px');
-      update();
-      restartAutoplay();
-    })();
-  </script>
 </body>
 </html>

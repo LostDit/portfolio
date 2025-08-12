@@ -1,4 +1,4 @@
-// js/background.js — particles + animated gradient + parallax waves
+// js/background.js - particles + animated gradient
 (function(){
   const canvas = document.getElementById('bg');
   if (!canvas) return;
@@ -12,6 +12,7 @@
   let hue = 355;
 
   function rand(a,b){ return a + Math.random()*(b-a); }
+  
   function resize(){
     DPR = Math.max(1, window.devicePixelRatio || 1);
     W = Math.max(320, window.innerWidth);

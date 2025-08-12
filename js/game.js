@@ -3,36 +3,31 @@
   const canvas = document.getElementById('gameCanvas');
   if (!canvas) return;
   const ctx = canvas.getContext('2d');
+  const overlay = document.createElement('div');
+  overlay.className = 'game-overlay';
+  document.body.appendChild(overlay);
 
-  // вставляем оверлей в DOM (с кнопками Restart / Exit)
-  let overlay = document.querySelector('.game-overlay');
-  if (!overlay) {
-    overlay = document.createElement('div');
-    overlay.className = 'game-overlay';
-    document.body.appendChild(overlay);
-  }
-
-  // --- Игровые параметры ---
+  // Game parameters
   const GRAVITY = 0.5;
   const JUMP_FORCE = -12;
   const PLAYER_SIZE = 30;
   const OBSTACLE_WIDTH = 20;
   const GAME_SPEED_START = 5;
   const GAME_SPEED_INCREMENT = 0.005;
-
-  // Состояние
+  
+  // Game state
   let gameActive = false;
   let rafId = null;
   let gameSpeed = GAME_SPEED_START;
   let score = 0;
   let frameCount = 0;
-
-  // Игрок
+  
+  // Player
   const player = { x: 80, y: 0, vy: 0, jumping: false, color: '#d10000' };
   let groundY;
   let obstacles = [];
-
-  // --- инициализация размеров ---
+  
+  // Initialize game
   function initGame() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
@@ -44,12 +39,11 @@
     gameSpeed = GAME_SPEED_START;
     score = 0;
     frameCount = 0;
-    // показываем canvas
     canvas.style.display = 'block';
     canvas.focus?.();
   }
-
-  // генерация препятствия
+  
+  // Generate obstacle
   function generateObstacle() {
     const height = 30 + Math.random() * 60;
     obstacles.push({
@@ -60,80 +54,89 @@
       color: '#8a0303'
     });
   }
-
+  
   function checkCollision() {
     for (let obstacle of obstacles) {
+      const playerRight = player.x + PLAYER_SIZE;
+      const playerBottom = player.y + PLAYER_SIZE;
+      const obstacleRight = obstacle.x + obstacle.width;
+      const obstacleBottom = obstacle.y + obstacle.height;
+      
       if (
-        player.x + PLAYER_SIZE > obstacle.x &&
-        player.x < obstacle.x + obstacle.width &&
-        player.y + PLAYER_SIZE > obstacle.y
-      ) return true;
+        playerRight > obstacle.x &&
+        player.x < obstacleRight &&
+        playerBottom > obstacle.y &&
+        player.y < obstacleBottom
+      ) {
+        return true;
+      }
     }
     return false;
   }
-
+  
   function draw() {
-    ctx.clearRect(0,0,canvas.width,canvas.height);
-
-    // фон земли
+    // Clear canvas
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+    // Draw ground
     ctx.fillStyle = '#111';
     ctx.fillRect(0, groundY, canvas.width, canvas.height - groundY);
-
-    // игрок (круг)
+    
+    // Draw player
     ctx.fillStyle = player.color;
     ctx.beginPath();
-    ctx.arc(player.x, player.y, PLAYER_SIZE, 0, Math.PI*2);
+    ctx.arc(player.x, player.y, PLAYER_SIZE, 0, Math.PI * 2);
     ctx.fill();
-
-    // глаза
+    
+    // Draw eyes
     ctx.fillStyle = 'white';
     ctx.beginPath();
     ctx.arc(player.x + 10, player.y - 6, 5, 0, Math.PI * 2);
     ctx.arc(player.x - 10, player.y - 6, 5, 0, Math.PI * 2);
     ctx.fill();
-
-    // зрачки
+    
+    // Draw pupils
     ctx.fillStyle = 'black';
     ctx.beginPath();
     ctx.arc(player.x + 10, player.y - 6, 2, 0, Math.PI * 2);
     ctx.arc(player.x - 10, player.y - 6, 2, 0, Math.PI * 2);
     ctx.fill();
-
-    // препятствия
+    
+    // Draw obstacles
     obstacles.forEach(obstacle => {
       ctx.fillStyle = obstacle.color;
       ctx.fillRect(obstacle.x, obstacle.y, obstacle.width, obstacle.height);
     });
-
-    // счет
+    
+    // Draw score
     ctx.fillStyle = 'white';
     ctx.font = '22px Inter, Arial';
     ctx.fillText('Счет: ' + score, 20, 40);
   }
-
-  // основной цикл (рекурсивный)
+  
+  // Main game loop
   function update() {
-    if (!gameActive) return; // остановка цикла
-
+    if (!gameActive) return;
+    
     frameCount++;
-
-    // физика
+    
+    // Apply gravity
     player.vy += GRAVITY;
     player.y += player.vy;
-
-    // приземление
+    
+    // Ground collision
     if (player.y > groundY - PLAYER_SIZE) {
       player.y = groundY - PLAYER_SIZE;
       player.vy = 0;
       player.jumping = false;
     }
-
-    // генерация препятствий (случайно + по фреймам)
+    
+    // Generate obstacles
     if (frameCount % Math.max(60, Math.floor(120 - gameSpeed*6)) === 0) {
       generateObstacle();
     }
-
-    // движение препятствий
+    
+    // Move obstacles
     for (let i = obstacles.length - 1; i >= 0; i--) {
       obstacles[i].x -= gameSpeed;
       if (obstacles[i].x + obstacles[i].width < 0) {
@@ -141,34 +144,34 @@
         score++;
       }
     }
-
-    // столкновения
+    
+    // Check collisions
     if (checkCollision()) {
       endGame();
       return;
     }
-
-    // скорость со временем
+    
+    // Increase difficulty
     gameSpeed += GAME_SPEED_INCREMENT;
-
-    // рисуем
+    
+    // Draw frame
     draw();
-
+    
+    // Continue loop
     rafId = requestAnimationFrame(update);
   }
-
-  // старт / стоп
+  
+  // Start game
   function startGame() {
     if (gameActive) return;
     initGame();
     gameActive = true;
     overlay.style.display = 'none';
-    // включаем pointer-events на canvas (если где-то выключено)
     canvas.style.pointerEvents = 'auto';
-    // запускаем цикл
     rafId = requestAnimationFrame(update);
   }
-
+  
+  // End game
   function endGame() {
     gameActive = false;
     if (rafId) cancelAnimationFrame(rafId);
@@ -181,29 +184,23 @@
       </div>
     `;
     overlay.style.display = 'flex';
-
-    // обработчики кнопок
-    document.getElementById('restartButton').addEventListener('click', () => {
-      startGame();
-    });
-    document.getElementById('exitButton').addEventListener('click', () => {
-      exitGame();
-    });
+    
+    // Add event listeners
+    document.getElementById('restartButton').addEventListener('click', startGame);
+    document.getElementById('exitButton').addEventListener('click', exitGame);
   }
-
+  
+  // Exit game
   function exitGame() {
-    // скрываем все и возвращаем состояние
     gameActive = false;
     if (rafId) cancelAnimationFrame(rafId);
     overlay.style.display = 'none';
     canvas.style.display = 'none';
-    canvas.style.pointerEvents = 'none';
-    // чистим obstacles и счет
     obstacles = [];
     score = 0;
   }
-
-  // ввод: пробел и Esc
+  
+  // Handle keyboard input
   function handleKey(e) {
     if (e.code === 'Space') {
       e.preventDefault();
@@ -212,32 +209,24 @@
         player.vy = JUMP_FORCE;
         player.jumping = true;
       }
-    } else if (e.code === 'Escape') {
+    } else if (e.code === 'Escape' && gameActive) {
       e.preventDefault();
-      if (gameActive) {
-        // быстро завершить текущую игру
-        endGame();
-      } else {
-        exitGame();
-      }
+      endGame();
     }
   }
   window.addEventListener('keydown', handleKey);
-
-  // клик по canvas (мобильные)
-  canvas.addEventListener('pointerdown', (e) => {
-    if (!gameActive) {
-      startGame();
-    } else if (!player.jumping) {
+  
+  // Handle touch/mouse input
+  canvas.addEventListener('pointerdown', () => {
+    if (!gameActive) startGame();
+    else if (!player.jumping) {
       player.vy = JUMP_FORCE;
       player.jumping = true;
     }
   });
-
-  // корректная реакция на ресайз
+  
+  // Handle window resize
   window.addEventListener('resize', () => {
     if (gameActive) initGame();
   });
-
-  // подсказка: можно начать игру нажатием Space (оставляем hint в footer)
 })();
