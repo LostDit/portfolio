@@ -1,4 +1,4 @@
-// js/app.js
+// js/app.js — smooth scroll, reveal on scroll, safe menu toggle
 (function () {
   'use strict';
 
@@ -20,7 +20,7 @@
     requestAnimationFrame(step);
   }
 
-  // Smooth anchors
+  // Смягчающая привязка для ссылок
   function initSmoothAnchors() {
     document.querySelectorAll('a[href^="#"]').forEach(a => {
       a.addEventListener('click', (e) => {
@@ -34,13 +34,15 @@
     });
   }
 
-  // Reveal on scroll
+  // Reveal on scroll via IntersectionObserver
   function initRevealOnScroll() {
     const opts = { threshold: 0.12 };
     const io = new IntersectionObserver((entries) => {
       entries.forEach(en => {
         if (en.isIntersecting) {
           en.target.classList.add('inview');
+          // unobserve to preserve performance
+          io.unobserve(en.target);
         }
       });
     }, opts);
@@ -50,12 +52,18 @@
     });
   }
 
-  // Инициализация
-  function init() {
-    initSmoothAnchors();
-    initRevealOnScroll();
-    
-    // Accessibility helper
+  // Safe menu-toggle
+  const menuToggle = document.querySelector('.menu-toggle');
+  if (menuToggle) {
+    menuToggle.addEventListener('click', function() {
+      this.classList.toggle('active');
+      const nav = document.querySelector('.nav');
+      if (nav) nav.classList.toggle('active');
+    });
+  }
+
+  // Accessibility helper
+  function initAccessibility() {
     let usingKeyboard = false;
     window.addEventListener('keydown', (e) => {
       if (e.key === 'Tab') usingKeyboard = true;
@@ -65,6 +73,13 @@
       usingKeyboard = false;
       document.documentElement.classList.remove('keyboard');
     });
+  }
+
+  // init
+  function init() {
+    initSmoothAnchors();
+    initRevealOnScroll();
+    initAccessibility();
   }
 
   if (document.readyState === 'loading') {

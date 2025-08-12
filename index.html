@@ -3,23 +3,30 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Максим — начинающий разработчик</title>
-  <meta name="description" content="Портфолио начинающего разработчика Максим — проекты на C++, веб, алгоритмы." />
+  <title>Портфолио</title>
+  <meta name="description" content="Портфолио — проекты на C++, веб, алгоритмы." />
   <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
   <!-- Canvas для кровавых линий -->
-  <canvas id="bloodCanvas"></canvas>
-  
-  <!-- Canvas для частиц -->
+  <canvas id="bloodCanvas" aria-hidden="true"></canvas>
+
+  <!-- Canvas для анимированного фонa -->
   <canvas id="bg" aria-hidden="true"></canvas>
+
+  <!-- Canvas для игры (показывается по клику/Space) -->
+  <canvas id="gameCanvas" aria-hidden="true"></canvas>
 
   <div class="wrap">
     <header class="site">
+      <button class="menu-toggle" aria-label="Меню">
+        <span></span><span></span><span></span>
+      </button>
+
       <div class="brand">
         <img 
           class="logo" 
-          src="https://i.pinimg.com/originals/a4/8c/cd/a48ccdcbe732427c4b5f6dfae4b3ff59.gif" 
+          src="https://i.pinimg.com/originals/dd/bd/bb/ddbdbb4e52eca46511756f9e41cab21b.gif" 
           alt="Аватар Максим"
           loading="lazy"
         >
@@ -49,30 +56,109 @@
         </div>
       </section>
 
+      <!-- Projects: замените ссылки/описания/годы под свои -->
       <section id="projects">
         <h3>Проекты</h3>
+
         <div class="projects-grid">
-          <article class="project-card">
-            <h4>Чат на C++</h4>
-            <p>Прототип WebSocket-сервера на Boost.Beast и простой веб-клиент.</p>
+          <!-- Portfolio -->
+          <article class="project-card" data-tilt-max="12" data-tilt-scale="1.03" data-delay="0.1">
+            <a class="project-media" href="https://github.com/LostDit/portfolio" target="_blank" rel="noopener">
+              <img class="project-gif" src="https://i.pinimg.com/originals/20/ff/e4/20ffe419796909feca129d6ab0e846ee.gif" alt="Portfolio preview">
+              <div class="media-overlay" aria-hidden="true"></div>
+            </a>
+            <div class="project-body">
+              <div class="project-title">
+                <h4><a href="https://github.com/LostDit/portfolio" target="_blank" rel="noopener">Portfolio</a></h4>
+                <div class="muted">Aug 11, 2025</div>
+              </div>
+              <p class="project-desc">Личный одностраничный сайт: адаптивная верстка, Canvas-анимации, демонстрация проектов.</p>
+              <div class="project-tags">
+                <span class="tag">HTML</span><span class="tag">CSS</span><span class="tag">Canvas</span><span class="tag">Vanilla JS</span>
+              </div>
+              <div class="project-actions">
+                <a class="action-primary" href="https://github.com/LostDit/portfolio" target="_blank" rel="noopener">Repo</a>
+                <a class="action-ghost" href="#contact">Contact</a>
+              </div>
+            </div>
           </article>
 
-          <article class="project-card">
-            <h4>Лендинги</h4>
-            <p>Адаптивные лендинги и мини-приложения на чистом JS и Canvas.</p>
+          <!-- os_overview_project -->
+          <article class="project-card" data-tilt-max="10" data-tilt-scale="1.02" data-delay="0.2">
+            <a class="project-media" href="https://github.com/LostDit/os_overview_project" target="_blank" rel="noopener">
+              <img class="project-gif" src="https://i.pinimg.com/originals/b2/1e/f4/b21ef4dfad7e54e643831629b79ce188.gif" alt="OS overview preview">
+              <div class="media-overlay" aria-hidden="true"></div>
+            </a>
+            <div class="project-body">
+              <div class="project-title">
+                <h4><a href="https://github.com/LostDit/os_overview_project" target="_blank" rel="noopener">OS Overview</a></h4>
+                <div class="muted">Aug 03, 2025</div>
+              </div>
+              <p class="project-desc">Учебный проект по обзору ОС — мониторинг, модули, сборка через CMake.</p>
+              <div class="project-tags">
+                <span class="tag">C++</span><span class="tag">CMake</span><span class="tag">Boost</span>
+              </div>
+              <div class="project-actions">
+                <a class="action-primary" href="https://github.com/LostDit/os_overview_project" target="_blank" rel="noopener">Repo</a>
+                <a class="action-ghost" href="#contact">Contact</a>
+              </div>
+            </div>
           </article>
 
-          <article class="project-card">
-            <h4>Алгоритмы</h4>
-            <p>Решения задач на C++: структуры данных и алгоритмы.</p>
+          <!-- Joint-tasks -->
+          <article class="project-card" data-tilt-max="10" data-tilt-scale="1.02" data-delay="0.3">
+            <a class="project-media" href="https://github.com/LostDit/Joint-tasks" target="_blank" rel="noopener">
+              <img class="project-gif" src="https://i.pinimg.com/originals/9d/a2/fb/9da2fbcb10be85cd197a0ce90fce1381.gif" alt="Joint tasks preview">
+              <div class="media-overlay" aria-hidden="true"></div>
+            </a>
+            <div class="project-body">
+              <div class="project-title">
+                <h4><a href="https://github.com/LostDit/Joint-tasks" target="_blank" rel="noopener">Joint-tasks</a></h4>
+                <div class="muted">Dec 28, 2024</div>
+              </div>
+              <p class="project-desc">Сборник задач/решений для практики алгоритмов и подготовки к собеседованиям.</p>
+              <div class="project-tags">
+                <span class="tag">C++</span><span class="tag">Algorithms</span>
+              </div>
+              <div class="project-actions">
+                <a class="action-primary" href="https://github.com/LostDit/Joint-tasks" target="_blank" rel="noopener">Repo</a>
+                <a class="action-ghost" href="#contact">Contact</a>
+              </div>
+            </div>
+          </article>
+
+          <!-- Учебные лабораторные -->
+          <article class="project-card" data-tilt-max="8" data-tilt-scale="1.01" data-delay="0.4">
+            <a class="project-media" href="https://github.com/LostDit" target="_blank" rel="noopener">
+              <img class="project-gif" src="https://i.pinimg.com/originals/1d/51/5f/1d515f7cc97f34b9ac0c85ec0c7abda8.gif" alt="Labs preview">
+              <div class="media-overlay" aria-hidden="true"></div>
+            </a>
+            <div class="project-body">
+              <div class="project-title">
+                <h4>Учебные репозитории</h4>
+                <div class="muted">2024–2025</div>
+              </div>
+              <p class="project-desc">Лабораторные и учебные проекты — демонстрация практики, сборка, примеры кода.</p>
+              <div class="project-tags">
+                <span class="tag">C++</span><span class="tag">CMake</span><span class="tag">Visual Studio</span>
+              </div>
+              <div class="project-actions">
+                <a class="action-primary" href="https://github.com/LostDit" target="_blank" rel="noopener">GitHub</a>
+                <a class="action-ghost" href="#contact">Contact</a>
+              </div>
+            </div>
           </article>
         </div>
+
+        <p style="margin-top:12px" class="muted">
+          Полный список репозиториев — на <a href="https://github.com/LostDit" target="_blank" rel="noopener">github.com/LostDit</a>.
+        </p>
       </section>
 
       <section id="about">
         <h3>Обо мне</h3>
         <div class="card">
-          <p>Я только начинаю, но люблю вникать в детали. Сейчас учу modern C++ (C++17/20), Boost.Asio и фронтенд. Готов к небольшим проектам и коллаборациям.</p>
+          <p>Я изучаю modern C++ (C++17/20), Boost.Asio, web и canvas-анимации. Готов к небольшим проектам и коллаборациям.</p>
         </div>
       </section>
 
@@ -81,7 +167,7 @@
         <div class="contact">
           <div class="card">
             <p><strong>Email:</strong> <a href="mailto:lostdead@svaiol.ru">lostdead@svaiol.ru</a></p>
-            <p><strong>GitHub:</strong> <a href="https://github.com/LostDit" target="_blank" rel="noopener">https://github.com/LostDit</a></p>
+            <p><strong>GitHub:</strong> <a href="https://github.com/LostDit" target="_blank" rel="noopener">github.com/LostDit</a></p>
           </div>
           <div class="card">
             <p>Напишите — отвечу по почте или через GitHub.</p>
@@ -90,128 +176,16 @@
       </section>
     </main>
 
-    <footer>© 2025 Максим — начинающий разработчик</footer>
+    <footer>© 2025 Максим — начинающий разработчик
+      <div class="game-hint">Нажмите Space для игры!</div>
+    </footer>
   </div>
 
-  <!-- Скрипт кровавых линий -->
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      const canvas = document.getElementById('bloodCanvas');
-      if (!canvas) return;
-      const ctx = canvas.getContext('2d');
-      
-      // Параметры крови
-      const BLOOD_COLOR = '#8a0303';
-      const BLOOD_DROP_COLOR = '#d10000';
-      const LINE_WIDTH = 2;
-      const DROP_RADIUS = 2;
-      const LINE_COUNT = 40;
-      
-      // Текущие линии
-      let bloodLines = [];
-      
-      function resizeCanvas() {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-        generateBloodLines();
-        drawBloodEffect();
-      }
-      
-      function generateBloodLines() {
-        bloodLines = [];
-        const width = canvas.width;
-        const height = canvas.height;
-        
-        for (let i = 0; i < LINE_COUNT; i++) {
-          const startX = Math.random() * width;
-          const startY = -20;
-          const endX = startX + (Math.random() - 0.5) * 300;
-          const endY = height + 20;
-          
-          // Контрольные точки для кривой
-          const cp1x = startX + (Math.random() - 0.5) * 400;
-          const cp1y = startY + height * 0.3;
-          const cp2x = startX + (Math.random() - 0.5) * 400;
-          const cp2y = startY + height * 0.7;
-          
-          // Капли вдоль линии
-          const drops = [];
-          for (let j = 0; j < 8; j++) {
-            const progress = Math.random();
-            drops.push({
-              progress,
-              size: 2 + Math.random() * 3,
-              offsetX: (Math.random() - 0.5) * 10,
-              offsetY: (Math.random() - 0.5) * 10
-            });
-          }
-          
-          bloodLines.push({
-            startX, startY, endX, endY, 
-            cp1x, cp1y, cp2x, cp2y,
-            drops,
-            thickness: 1.5 + Math.random() * 1.5
-          });
-        }
-      }
-      
-      function drawBloodEffect() {
-        // Очищаем canvas
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        
-        // Рисуем черный фон
-        ctx.fillStyle = '#000000';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        
-        // Рисуем линии крови
-        ctx.strokeStyle = BLOOD_COLOR;
-        ctx.lineWidth = LINE_WIDTH;
-        ctx.lineCap = 'round';
-        
-        bloodLines.forEach(line => {
-          ctx.beginPath();
-          ctx.moveTo(line.startX, line.startY);
-          ctx.bezierCurveTo(
-            line.cp1x, line.cp1y,
-            line.cp2x, line.cp2y,
-            line.endX, line.endY
-          );
-          ctx.stroke();
-          
-          // Рисуем капли
-          line.drops.forEach(drop => {
-            const t = drop.progress;
-            // Формула Безье для позиции капли
-            const x = Math.pow(1 - t, 3) * line.startX + 
-                      3 * Math.pow(1 - t, 2) * t * line.cp1x + 
-                      3 * (1 - t) * Math.pow(t, 2) * line.cp2x + 
-                      Math.pow(t, 3) * line.endX;
-            const y = Math.pow(1 - t, 3) * line.startY + 
-                      3 * Math.pow(1 - t, 2) * t * line.cp1y + 
-                      3 * (1 - t) * Math.pow(t, 2) * line.cp2y + 
-                      Math.pow(t, 3) * line.endY;
-            
-            drawBloodDrop(ctx, x + drop.offsetX, y + drop.offsetY, drop.size);
-          });
-        });
-      }
-      
-      function drawBloodDrop(ctx, x, y, size) {
-        ctx.fillStyle = BLOOD_DROP_COLOR;
-        ctx.beginPath();
-        ctx.ellipse(x, y, size, size * 1.5, Math.PI/4, 0, Math.PI * 2);
-        ctx.fill();
-      }
-      
-      // Инициализация
-      window.addEventListener('resize', resizeCanvas);
-      resizeCanvas();
-    });
-  </script>
-  
-  <!-- Скрипт фона (частицы) -->
-  <script src="js/background.js"></script>
-  <!-- Основной скрипт сайта -->
+  <!-- Скрипты -->
   <script src="js/app.js"></script>
+  <script src="js/projects.js"></script>
+  <script src="js/background.js"></script>
+  <!-- game.js, если есть локально -->
+  <script src="js/game.js"></script>
 </body>
 </html>
