@@ -12,6 +12,36 @@
   --shadow-accent-strong: rgba(30,144,255,0.18);
 }
 
+footer {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 14px 20px;
+  background: linear-gradient(180deg, rgba(0,0,0,0.35), rgba(0,0,0,0.25)); /* полу-прозрачный фон, можно убрать */
+  border-top: 1px solid var(--accent);
+  z-index: 40;
+  text-align: center;
+  box-sizing: border-box;
+  backdrop-filter: blur(6px);
+}
+
+/* Если .game-hint внутри футера — делаем компактным */
+footer .game-hint {
+  margin: 0 0 0 12px; /* если хотите подсказку справа от текста, или 0 для новой строки */
+  font-size: 0.9rem;
+  color: var(--accent2);
+}
+
+/* Защитный отступ у основного контента, чтобы footer не перекрывал текст */
+main {
+  padding-bottom: 84px; /* >= высоты footer, можно подкорректировать */
+}
+
 /* Reset / base */
 *{box-sizing:border-box}
 html,body{height:100%;margin:0;background: linear-gradient(180deg,var(--bg-top),var(--bg-bottom));color:var(--text);font-family:Inter, Roboto, Arial, sans-serif;-webkit-font-smoothing:antialiased;}
