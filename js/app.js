@@ -93,3 +93,28 @@
 
   window.__app_helpers = { smoothScrollTo };
 })();
+
+document.addEventListener('DOMContentLoaded', () => {
+  const navLinks = document.querySelectorAll('.nav-link');
+
+  // простая подсветка по клику
+  navLinks.forEach(link => {
+    link.addEventListener('click', () => {
+      navLinks.forEach(l => l.classList.remove('active'));
+      link.classList.add('active');
+    });
+  });
+
+  // подсветка по скроллу (IntersectionObserver)
+  const sections = Array.from(document.querySelectorAll('main section[id]'));
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(en => {
+      if (en.isIntersecting) {
+        const id = en.target.id;
+        navLinks.forEach(l => l.classList.toggle('active', l.getAttribute('href') === `#${id}`));
+      }
+    });
+  }, { threshold: 0.35 });
+
+  sections.forEach(s => io.observe(s));
+});

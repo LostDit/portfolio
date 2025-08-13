@@ -1,150 +1,112 @@
-// js/slider.js
+// js/slider.js — Book flip slider for #presentation
 document.addEventListener('DOMContentLoaded', () => {
-  const slider = document.querySelector('.slider');
-  if (!slider) return;
+  const book = document.getElementById('presentation');
+  if (!book) return;
 
-  const slidesEl = slider.querySelector('.slides');
-  if (!slidesEl) return;
-
-  const slides = Array.from(slidesEl.querySelectorAll('.slide'));
-  const dotsContainer = slider.querySelector('#slider-dots');
-  const nextBtns = slider.querySelectorAll('[data-action="next"]');
-  const prevBtns = slider.querySelectorAll('[data-action="prev"]');
-  const sliderControls = slider.querySelector('.slider-controls');
-
-  if (slides.length === 0) return;
+  const pagesWrapper = book.querySelector('.pages');
+  const pages = Array.from(book.querySelectorAll('.page'));
+  const pager = book.querySelector('.book-pager');
+  const prevBtn = book.querySelector('[data-action="prev"]');
+  const nextBtn = book.querySelector('[data-action="next"]');
 
   let index = 0;
-  const total = slides.length;
-  const AUTOPLAY_MS = 4500;
+  const total = pages.length;
+  const AUTOPLAY_MS = 6000;
   let autoplay = true;
   let timer = null;
+  let animating = false;
 
-  // ensure there is a visible caption area
-  let caption = slider.querySelector('.slider-caption');
-  if (!caption) {
-    caption = document.createElement('div');
-    caption.className = 'slider-caption';
-    caption.textContent = 'Автоплей • Нажмите стрелки для навигации';
-    if (sliderControls) sliderControls.appendChild(caption);
-    else slider.appendChild(caption);
+  function updatePager() {
+    if (!pager) return;
+    pager.textContent = `${index + 1} / ${total}`;
   }
 
-  // play/pause button (small)
-  let playBtn = slider.querySelector('.slider-playpause');
-  if (!playBtn) {
-    playBtn = document.createElement('button');
-    playBtn.type = 'button';
-    playBtn.className = 'slider-playpause';
-    playBtn.setAttribute('aria-label', 'Пауза автоплея');
-    playBtn.title = 'Пауза/воспроизвести';
-    playBtn.style.marginLeft = '12px';
-    playBtn.style.padding = '6px 8px';
-    playBtn.style.borderRadius = '8px';
-    playBtn.style.border = '1px solid rgba(255,255,255,0.04)';
-    playBtn.style.background = 'transparent';
-    playBtn.style.color = 'var(--text)';
-    playBtn.style.cursor = 'pointer';
-    playBtn.textContent = '⏸';
-    caption.parentNode && caption.parentNode.appendChild(playBtn);
-  }
+  function setCurrent(i) {
+    if (animating) return;
+    animating = true;
+    const prev = pages[index];
+    const nextIndex = ((i % total) + total) % total;
+    const next = pages[nextIndex];
+    if (prev === next) { animating = false; return; }
 
-  function updateCaption() {
-    caption.textContent = autoplay ? 'Автоплей • Нажмите стрелки для навигации' : 'Автоплей приостановлён';
-    playBtn.textContent = autoplay ? '⏸' : '▶';
-    playBtn.setAttribute('aria-pressed', (!autoplay).toString());
-  }
+    // flip prev to left (visual)
+    prev.classList.add('flipped');
+    prev.classList.remove('current');
 
-  // Set active slide
-  function setActive(i) {
-    index = ((i % total) + total) % total;
-    slides.forEach((s, idx) => s.classList.toggle('active', idx === index));
-    if (dotsContainer) {
-      Array.from(dotsContainer.children).forEach((d, idx) => d.classList.toggle('active', idx === index));
-    }
-  }
+    // show next
+    next.classList.remove('flipped');
+    next.classList.add('current');
 
-  function next() { setActive(index + 1); restartAutoplay(); }
-  function prev() { setActive(index - 1); restartAutoplay(); }
-
-  // Build navigation dots
-  function buildDots() {
-    if (!dotsContainer) return;
-    dotsContainer.innerHTML = '';
-    for (let i = 0; i < total; i++) {
-      const dot = document.createElement('button');
-      dot.className = 'slider-dot' + (i === 0 ? ' active' : '');
-      dot.type = 'button';
-      dot.setAttribute('aria-label', 'Перейти к слайду ' + (i + 1));
-      dot.dataset.i = i;
-      dot.addEventListener('click', () => {
-        setActive(parseInt(dot.dataset.i, 10));
-        restartAutoplay();
+    // after transition end, cleanup flipped pages except those behind current
+    const onTransitionEnd = () => {
+      // keep only current with high z-index, others remain rotated away
+      pages.forEach((p, idx) => {
+        if (idx === nextIndex) {
+          p.classList.add('current');
+          p.classList.remove('flipped');
+          p.style.zIndex = 5;
+        } else {
+          p.classList.remove('current');
+          p.style.zIndex = 1;
+        }
       });
-      dotsContainer.appendChild(dot);
-    }
+      index = nextIndex;
+      updatePager();
+      animating = false;
+      prev.removeEventListener('transitionend', onTransitionEnd);
+    };
+    // listen transition on prev (it will flip)
+    prev.addEventListener('transitionend', onTransitionEnd);
   }
 
-  // Restart autoplay
+  function next() { setCurrent(index + 1); restartAutoplay(); }
+  function prev() { setCurrent(index - 1); restartAutoplay(); }
+
   function restartAutoplay() {
     if (!autoplay) return;
     if (timer) clearInterval(timer);
-    timer = setInterval(() => setActive(index + 1), AUTOPLAY_MS);
+    timer = setInterval(() => setCurrent(index + 1), AUTOPLAY_MS);
   }
 
-  // toggle autoplay
-  function toggleAutoplay() {
-    autoplay = !autoplay;
-    if (!autoplay && timer) {
-      clearInterval(timer); timer = null;
+  // init pages state
+  pages.forEach((p, i) => {
+    p.classList.remove('current', 'flipped');
+    if (i === 0) {
+      p.classList.add('current');
+      p.style.zIndex = 5;
     } else {
-      restartAutoplay();
-    }
-    updateCaption();
-  }
-
-  // Add event listeners for controls
-  if (nextBtns.length > 0) nextBtns.forEach(btn => btn.addEventListener('click', next));
-  if (prevBtns.length > 0) prevBtns.forEach(btn => btn.addEventListener('click', prev));
-
-  // Pause on hover
-  slider.addEventListener('mouseenter', () => {
-    if (autoplay) {
-      if (timer) clearInterval(timer);
-      timer = null;
+      p.classList.remove('current');
+      p.classList.remove('flipped');
+      p.style.zIndex = 1;
+      // rotated away handled by CSS for non-current
     }
   });
-  slider.addEventListener('mouseleave', () => { if (autoplay) restartAutoplay(); });
+  updatePager();
+  restartAutoplay();
+
+  // attach controls
+  if (nextBtn) nextBtn.addEventListener('click', next);
+  if (prevBtn) prevBtn.addEventListener('click', prev);
+
+  // pause on hover
+  book.addEventListener('mouseenter', () => { autoplay = false; if (timer) clearInterval(timer); });
+  book.addEventListener('mouseleave', () => { autoplay = true; restartAutoplay(); });
 
   // keyboard
-  document.addEventListener('keydown', (e) => {
+  window.addEventListener('keydown', (e) => {
     if (e.key === 'ArrowLeft') prev();
     if (e.key === 'ArrowRight') next();
-    if (e.key === ' ' && document.activeElement === document.body) {
-      // space toggles autoplay only when not focused on input
-      e.preventDefault();
-      toggleAutoplay();
-    }
   });
 
-  // play/pause button handler
-  playBtn.addEventListener('click', toggleAutoplay);
-
-  // touch swipe (basic)
+  // touch: simple swipe support
   let touchStartX = null;
-  slidesEl.addEventListener('touchstart', (e) => { touchStartX = e.touches[0].clientX; }, { passive: true });
-  slidesEl.addEventListener('touchend', (e) => {
+  book.addEventListener('touchstart', (e) => { touchStartX = e.touches[0].clientX; }, { passive: true });
+  book.addEventListener('touchend', (e) => {
     if (touchStartX === null) return;
     const dx = (e.changedTouches[0].clientX - touchStartX);
     if (Math.abs(dx) > 40) {
       if (dx < 0) next(); else prev();
     }
     touchStartX = null;
-  });
-
-  // Initialize
-  buildDots();
-  setActive(0);
-  updateCaption();
-  restartAutoplay();
+  }, { passive: true });
 });
