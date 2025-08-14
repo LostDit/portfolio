@@ -211,7 +211,7 @@
           </article>
         </div>
 
-        <!-- code block (unchanged) -->
+        <!-- Для код ревью можно будет дополнить отдельной страницой с доп подключением на сервер который недавно прописывал -->
         <div class="code-card" data-lang="cpp">
           <div class="code-head">
             <div class="code-meta">
@@ -232,19 +232,20 @@
           </div>
 
           <div class="code-body">
-            <pre class="code-preview"><code class="language-cpp">// Пример: простой TCP-сервер (фрагмент)
-#include &lt;boost/asio.hpp&gt;
-using boost::asio::ip::tcp;
-int main() {
-  boost::asio::io_context io;
-  tcp::acceptor acceptor(io, tcp::endpoint(tcp::v4(), 5555));
-  for (;;) {
-    tcp::socket socket(io);
-    acceptor.accept(socket);
-    // обработка клиента...
-  }
-  return 0;
-}
+            <pre class="code-preview"><code class="language-cpp"> 
+              // Пример: простой TCP-сервер (фрагмент)
+                #include &lt;boost/asio.hpp&gt;
+                using boost::asio::ip::tcp;
+                int main() {
+                  boost::asio::io_context io;
+                  tcp::acceptor acceptor(io, tcp::endpoint(tcp::v4(), 5555));
+                  for (;;) {
+                    tcp::socket socket(io);
+                    acceptor.accept(socket);
+                    // обработка клиента...
+                  }
+                  return 0;
+                }
             </code></pre>
             <textarea class="code-editor-textarea" spellcheck="false" style="display:none;"></textarea>
           </div>
@@ -253,17 +254,17 @@ int main() {
         <p class="muted" style="margin-top:12px;">Полный список репозиториев — <a href="https://github.com/LostDit" target="_blank" rel="noopener">github.com/LostDit</a></p>
       </section>
 
-      <!-- About (unchanged) -->
+      <!-- Блок обо мне -->
       <section id="about">
         <h3>Обо мне</h3>
         <div class="card">
-          <!-- ... ваш расширенный блок "Обо мне" ... -->
+          <!--Блок нужно будет расширить и дописать-->>
           <p>Работаю с сетевыми приложениями и сокетами: Qt и Boost.Asio; активно пишу на C++ (ISO C++14/17/23). Немного фронтенда — этот сайт написан на чистом JS и Canvas. Сейчас углубляюсь в алгоритмизацию и структуры данных.</p>
-          <!-- остальные пункты -->
+          
         </div>
       </section>
 
-      <!-- Contact -->
+      <!-- Связь со мной -->
       <section id="contact">
         <h3>Контакты</h3>
         <div class="contact">
@@ -282,7 +283,7 @@ int main() {
     </footer>
   </div>
 
-  <!-- Скрипты -->
+  <!-- Выделил отдельный блок для объявление скриптов -->
   <script src="./js/app.js" defer></script>
   <script src="./js/projects.js" defer></script>
   <script src="./js/code-editor.js" defer></script>
