@@ -14,8 +14,8 @@
         
         :root {
             --bg-primary: #f8f0f5;
-            --bg-secondary: rgba(255, 255, 255, 0.9);
-            --bg-card: rgba(255, 255, 255, 0.95);
+            --bg-secondary: rgba(255, 255, 255, 0.7);
+            --bg-card: rgba(255, 255, 255, 0.9);
             --text-primary: #333;
             --text-secondary: #666;
             --accent-color: #8b1e3f;
@@ -26,8 +26,8 @@
             
             /* Темная тема переменные */
             --dark-bg-primary: #1a1a2e;
-            --dark-bg-secondary: rgba(30, 30, 46, 0.9);
-            --dark-bg-card: rgba(40, 40, 62, 0.95);
+            --dark-bg-secondary: rgba(30, 30, 46, 0.7);
+            --dark-bg-card: rgba(40, 40, 62, 0.9);
             --dark-text-primary: #e6e6e6;
             --dark-text-secondary: #b0b0b0;
             --dark-accent-color: #c44569;
@@ -75,11 +75,12 @@
             min-width: 100%;
             min-height: 100%;
             object-fit: cover;
-            opacity: 0.9;
+            opacity: 0.8;
+            transition: opacity 0.5s ease;
         }
         
         body.dark-theme #background-image {
-            opacity: 0.7;
+            opacity: 0.6;
             filter: brightness(0.7);
         }
         
@@ -93,6 +94,236 @@
             z-index: -1;
         }
         
+        /* Новогодняя гирлянда - исправленная версия */
+        .garland-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 999;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            overflow: hidden;
+        }
+        
+        .garland-container.active {
+            opacity: 1;
+        }
+        
+        /* Верхняя горизонтальная гирлянда - исправленная */
+        .garland-top {
+            position: absolute;
+            top: 100px; /* Ниже хедера */
+            left: 0;
+            width: 100%;
+            height: 20px;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+        }
+        
+        .garland-wire {
+            position: absolute;
+            top: 10px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, 
+                #ff0000, #ff9900, #ffff00, #00ff00, 
+                #0099ff, #6600ff, #ff00ff, #ff3366, #33ccff);
+            animation: garlandFlow 10s linear infinite;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        }
+        
+        /* Свисающие гирлянды - физически правильные */
+        .garland-chain {
+            position: absolute;
+            top: 100px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .garland-chain-left {
+            left: 50px;
+        }
+        
+        .garland-chain-right {
+            right: 50px;
+        }
+        
+        /* Провод свисающей гирлянды */
+        .chain-wire {
+            position: relative;
+            width: 2px;
+            background: linear-gradient(to bottom, 
+                #ff0000, #ff9900, #ffff00, #00ff00, 
+                #0099ff, #6600ff, #ff00ff);
+            box-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
+            animation: chainSway 6s infinite alternate ease-in-out;
+            border-radius: 10px;
+        }
+        
+        .chain-left {
+            height: 70vh;
+            animation-delay: 0.3s;
+            transform-origin: top center;
+        }
+        
+        .chain-right {
+            height: 85vh;
+            animation-delay: 0.7s;
+            transform-origin: top center;
+        }
+        
+        /* Шарики на гирлянде */
+        .garland-ball {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            animation: ballBlink 1.5s infinite alternate;
+            box-shadow: 0 0 15px currentColor, 0 0 25px currentColor;
+            z-index: 2;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        /* Верхние шарики на основной гирлянде */
+        .top-ball {
+            position: relative;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            animation: topBallBlink 2s infinite alternate;
+            box-shadow: 0 0 20px currentColor;
+            border: 2px solid rgba(255, 255, 255, 0.4);
+        }
+        
+        /* Волнистые гирлянды с физическим движением */
+        .garland-swing {
+            position: absolute;
+            top: 100px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .swing-wire {
+            position: relative;
+            width: 1px;
+            background: linear-gradient(to bottom, 
+                #ff3366, #ff6600, #ffcc00, #33cc33, 
+                #3399ff, #9966ff, #ff66cc);
+            box-shadow: 0 0 12px rgba(255, 255, 255, 0.7);
+            animation: swingMotion 8s infinite alternate ease-in-out;
+            border-radius: 15px;
+        }
+        
+        .swing-left {
+            left: 100px;
+            height: 65vh;
+            animation-delay: 1s;
+        }
+        
+        .swing-right {
+            right: 100px;
+            height: 90vh;
+            animation-delay: 1.5s;
+        }
+        
+        /* Анимации */
+        @keyframes garlandFlow {
+            0% { 
+                background-position: 0 0;
+                filter: hue-rotate(0deg);
+            }
+            100% { 
+                background-position: 1000px 0;
+                filter: hue-rotate(360deg);
+            }
+        }
+        
+        @keyframes chainSway {
+            0% { 
+                transform: rotate(-3deg);
+            }
+            50% { 
+                transform: rotate(1deg);
+            }
+            100% { 
+                transform: rotate(3deg);
+            }
+        }
+        
+        @keyframes swingMotion {
+            0% { 
+                transform: rotate(-5deg);
+            }
+            25% { 
+                transform: rotate(2deg);
+            }
+            50% { 
+                transform: rotate(-4deg);
+            }
+            75% { 
+                transform: rotate(1deg);
+            }
+            100% { 
+                transform: rotate(5deg);
+            }
+        }
+        
+        @keyframes ballBlink {
+            0% { 
+                opacity: 0.4; 
+                transform: translateX(-50%) scale(0.9);
+            }
+            100% { 
+                opacity: 1; 
+                transform: translateX(-50%) scale(1.1);
+                box-shadow: 0 0 25px currentColor, 0 0 35px currentColor;
+            }
+        }
+        
+        @keyframes topBallBlink {
+            0% { 
+                opacity: 0.3; 
+                transform: scale(0.85);
+            }
+            100% { 
+                opacity: 1; 
+                transform: scale(1.15);
+                box-shadow: 0 0 30px currentColor, 0 0 40px currentColor;
+            }
+        }
+        
+        /* Работающие снежинки */
+        .snowflake {
+            position: absolute;
+            top: -50px;
+            color: #ffffff;
+            font-size: 1.5rem;
+            pointer-events: none;
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
+            animation: snowFall 10s linear infinite;
+            z-index: 998;
+        }
+        
+        @keyframes snowFall {
+            0% {
+                transform: translateY(-100px) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+        
         /* Header Styles */
         header {
             position: fixed;
@@ -102,9 +333,9 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            z-index: 100;
+            z-index: 1000;
             background: var(--header-bg);
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(5px);
             box-shadow: 0 2px 20px var(--shadow);
             transition: background-color 0.3s ease, box-shadow 0.3s ease;
         }
@@ -192,7 +423,7 @@
         }
         
         /* Theme Toggle */
-        .theme-toggle {
+        .theme-toggle, .garland-toggle {
             background: none;
             border: none;
             color: var(--text-primary);
@@ -208,14 +439,32 @@
             margin-left: 15px;
         }
         
-        .theme-toggle:hover {
+        .theme-toggle:hover, .garland-toggle:hover {
             background: var(--accent-color);
             color: white;
+        }
+        
+        .garland-toggle.active {
+            color: #ff9900;
+            animation: garlandButtonGlow 2s infinite alternate;
+        }
+        
+        @keyframes garlandButtonGlow {
+            0% { 
+                box-shadow: 0 0 5px #ff9900; 
+                background-color: rgba(255, 153, 0, 0.1);
+            }
+            100% { 
+                box-shadow: 0 0 15px #ff9900, 0 0 20px #ff9900; 
+                background-color: rgba(255, 153, 0, 0.2);
+            }
         }
         
         /* Main Content */
         .content {
             padding-top: 120px;
+            position: relative;
+            z-index: 1;
         }
         
         section {
@@ -230,7 +479,7 @@
         .hero {
             text-align: center;
             background: var(--bg-secondary);
-            backdrop-filter: blur(5px);
+            backdrop-filter: blur(2px);
             transition: background-color 0.3s ease;
         }
         
@@ -289,6 +538,7 @@
         /* Projects Section */
         .projects-section {
             background: var(--bg-secondary);
+            backdrop-filter: blur(2px);
             transition: background-color 0.3s ease;
         }
         
@@ -417,7 +667,7 @@
         /* About Section */
         .about-section {
             background: var(--bg-secondary);
-            backdrop-filter: blur(5px);
+            backdrop-filter: blur(2px);
             transition: background-color 0.3s ease;
         }
         
@@ -440,6 +690,7 @@
         /* Contact Section */
         .contact-section {
             background: var(--bg-secondary);
+            backdrop-filter: blur(2px);
             transition: background-color 0.3s ease;
         }
         
@@ -489,6 +740,21 @@
             section {
                 padding: 80px 20px;
             }
+            
+            .garland-chain,
+            .garland-swing {
+                display: none;
+            }
+            
+            .top-ball {
+                width: 14px;
+                height: 14px;
+            }
+            
+            .garland-ball {
+                width: 12px;
+                height: 12px;
+            }
         }
     </style>
 </head>
@@ -498,6 +764,9 @@
     </div>
     
     <canvas id="sakura-canvas"></canvas>
+    
+    <!-- Новогодняя гирлянда -->
+    <div class="garland-container" id="garlandContainer"></div>
     
     <header>
         <div class="brand">
@@ -525,6 +794,9 @@
             <a href="https://discord.com/.lostdead" class="social-link" target="_blank">
                 <i class="fab fa-discord"></i>
             </a>
+            <button class="garland-toggle" id="garlandToggle" aria-label="Новогодняя гирлянда" title="Включить новогоднюю гирлянду">
+                <i class="fas fa-tree"></i>
+            </button>
             <button class="theme-toggle" id="themeToggle" aria-label="Переключить тему">
                 <i class="fas fa-moon"></i>
             </button>
@@ -835,47 +1107,292 @@
             });
         });
         
-        // Функционал переключения темы
-        const themeToggle = document.getElementById('themeToggle');
-        const themeIcon = themeToggle.querySelector('i');
+        // Цвета для гирлянды
+        const garlandColors = [
+            '#ff0000', '#ff9900', '#ffff00', 
+            '#00ff00', '#0099ff', '#6600ff', 
+            '#ff00ff', '#ff3366', '#33ccff', '#ff6600',
+            '#ff1493', '#00ffff', '#ff8c00', '#7fff00'
+        ];
         
-        // Проверяем сохраненную тему в localStorage
-        const savedTheme = localStorage.getItem('theme');
-        if (savedTheme === 'dark') {
-            document.body.classList.add('dark-theme');
-            themeIcon.classList.remove('fa-moon');
-            themeIcon.classList.add('fa-sun');
+        // Функция создания гирлянды с физически правильными цепями
+        function createGarland() {
+            const garlandContainer = document.getElementById('garlandContainer');
+            if (!garlandContainer) return;
+            
+            // Очищаем контейнер
+            garlandContainer.innerHTML = '';
+            
+            // Создаем верхнюю горизонтальную гирлянду
+            const topGarland = document.createElement('div');
+            topGarland.className = 'garland-top';
+            
+            // Провод верхней гирлянды
+            const topWire = document.createElement('div');
+            topWire.className = 'garland-wire';
+            topGarland.appendChild(topWire);
+            
+            // Шарики на верхней гирлянде
+            const topBallCount = Math.floor(window.innerWidth / 40);
+            for (let i = 0; i < topBallCount; i++) {
+                const ball = document.createElement('div');
+                ball.className = 'top-ball';
+                
+                // Позиционируем шарик
+                const position = (i / topBallCount) * 100;
+                ball.style.left = `${position}%`;
+                
+                // Выбираем случайный цвет
+                const colorIndex = i % garlandColors.length;
+                ball.style.backgroundColor = garlandColors[colorIndex];
+                
+                // Добавляем анимацию с задержкой
+                ball.style.animationDelay = `${(i * 0.1) % 2}s`;
+                
+                topGarland.appendChild(ball);
+            }
+            
+            garlandContainer.appendChild(topGarland);
+            
+            // Создаем свисающие гирлянды слева (короче)
+            createHangingGarland('left', 50, 70, 0.3);
+            createHangingGarland('left', 80, 65, 0.6);
+            createHangingGarland('left', 120, 60, 0.9);
+            
+            // Создаем свисающие гирлянды справа (длиннее)
+            createHangingGarland('right', 50, 85, 0.2);
+            createHangingGarland('right', 80, 90, 0.5);
+            createHangingGarland('right', 120, 95, 0.8);
+            
+            // Создаем волнистые гирлянды
+            createSwingGarland('left', 100, 65, 1.0);
+            createSwingGarland('right', 100, 90, 1.5);
+            
+            // Создаем снежинки
+            createSnowflakes();
         }
         
-        // Обработчик переключения темы
-        themeToggle.addEventListener('click', () => {
-            document.body.classList.toggle('dark-theme');
+        // Функция создания свисающей гирлянды
+        function createHangingGarland(side, offset, heightPercent, delay) {
+            const garlandContainer = document.getElementById('garlandContainer');
+            if (!garlandContainer) return;
             
-            if (document.body.classList.contains('dark-theme')) {
+            const chainContainer = document.createElement('div');
+            chainContainer.className = `garland-chain garland-chain-${side}`;
+            chainContainer.style.left = side === 'left' ? `${offset}px` : 'auto';
+            chainContainer.style.right = side === 'right' ? `${offset}px` : 'auto';
+            
+            // Провод гирлянды
+            const wire = document.createElement('div');
+            wire.className = `chain-wire chain-${side}`;
+            wire.style.height = `${heightPercent}vh`;
+            wire.style.animationDelay = `${delay}s`;
+            
+            // Добавляем шарики на провод
+            const ballCount = Math.floor((heightPercent * window.innerHeight / 100) / 50);
+            for (let i = 0; i < ballCount; i++) {
+                const ball = document.createElement('div');
+                ball.className = 'garland-ball';
+                
+                // Позиция по высоте
+                const position = (i / (ballCount - 1)) * 100;
+                ball.style.top = `${position}%`;
+                
+                // Цвет шарика
+                const colorIndex = (i + offset) % garlandColors.length;
+                ball.style.backgroundColor = garlandColors[colorIndex];
+                
+                // Задержка анимации
+                ball.style.animationDelay = `${(i * 0.15 + delay) % 3}s`;
+                
+                wire.appendChild(ball);
+            }
+            
+            chainContainer.appendChild(wire);
+            garlandContainer.appendChild(chainContainer);
+        }
+        
+        // Функция создания волнистой гирлянды
+        function createSwingGarland(side, offset, heightPercent, delay) {
+            const garlandContainer = document.getElementById('garlandContainer');
+            if (!garlandContainer) return;
+            
+            const swingContainer = document.createElement('div');
+            swingContainer.className = `garland-swing swing-${side}`;
+            swingContainer.style.left = side === 'left' ? `${offset}px` : 'auto';
+            swingContainer.style.right = side === 'right' ? `${offset}px` : 'auto';
+            
+            // Провод гирлянды
+            const wire = document.createElement('div');
+            wire.className = 'swing-wire';
+            wire.style.height = `${heightPercent}vh`;
+            wire.style.animationDelay = `${delay}s`;
+            
+            // Добавляем шарики
+            const ballCount = Math.floor((heightPercent * window.innerHeight / 100) / 40);
+            for (let i = 0; i < ballCount; i++) {
+                const ball = document.createElement('div');
+                ball.className = 'garland-ball';
+                
+                // Позиция по высоте
+                const position = (i / (ballCount - 1)) * 100;
+                ball.style.top = `${position}%`;
+                
+                // Цвет шарика
+                const colorIndex = (i + offset + 5) % garlandColors.length;
+                ball.style.backgroundColor = garlandColors[colorIndex];
+                
+                // Задержка анимации
+                ball.style.animationDelay = `${(i * 0.12 + delay) % 3}s`;
+                
+                // Случайное смещение для извилистости
+                const waveOffset = Math.sin(i * 1.5 + delay) * 15;
+                ball.style.left = `calc(50% + ${waveOffset}px)`;
+                
+                wire.appendChild(ball);
+            }
+            
+            swingContainer.appendChild(wire);
+            garlandContainer.appendChild(swingContainer);
+        }
+        
+        // Функция создания снежинок
+        function createSnowflakes() {
+            const garlandContainer = document.getElementById('garlandContainer');
+            if (!garlandContainer) return;
+            
+            const snowflakeCount = Math.floor(window.innerWidth / 50);
+            const snowflakes = ['❄', '❅', '❆', '＊', '⋆'];
+            
+            for (let i = 0; i < snowflakeCount; i++) {
+                const snowflake = document.createElement('div');
+                snowflake.className = 'snowflake';
+                snowflake.innerHTML = snowflakes[Math.floor(Math.random() * snowflakes.length)];
+                
+                // Начальная позиция
+                snowflake.style.left = `${Math.random() * 100}%`;
+                
+                // Анимация
+                const duration = 10 + Math.random() * 20;
+                const delay = Math.random() * 10;
+                snowflake.style.animationDuration = `${duration}s`;
+                snowflake.style.animationDelay = `${delay}s`;
+                
+                // Размер и прозрачность
+                snowflake.style.fontSize = `${0.8 + Math.random() * 1.2}rem`;
+                snowflake.style.opacity = `${0.5 + Math.random() * 0.5}`;
+                
+                garlandContainer.appendChild(snowflake);
+            }
+        }
+        
+        // Функция активации гирлянды
+        function activateGarland() {
+            const garlandContainer = document.getElementById('garlandContainer');
+            const garlandToggle = document.getElementById('garlandToggle');
+            const garlandIcon = garlandToggle ? garlandToggle.querySelector('i') : null;
+            
+            if (garlandContainer && garlandToggle && garlandIcon) {
+                garlandContainer.classList.add('active');
+                garlandToggle.classList.add('active');
+                garlandIcon.classList.remove('fa-tree');
+                garlandIcon.classList.add('fa-gifts');
+                createGarland();
+                localStorage.setItem('garland', 'true');
+            }
+        }
+        
+        // Функция деактивации гирлянды
+        function deactivateGarland() {
+            const garlandContainer = document.getElementById('garlandContainer');
+            const garlandToggle = document.getElementById('garlandToggle');
+            const garlandIcon = garlandToggle ? garlandToggle.querySelector('i') : null;
+            
+            if (garlandContainer && garlandToggle && garlandIcon) {
+                garlandContainer.classList.remove('active');
+                garlandToggle.classList.remove('active');
+                garlandIcon.classList.remove('fa-gifts');
+                garlandIcon.classList.add('fa-tree');
+                garlandContainer.innerHTML = '';
+                localStorage.setItem('garland', 'false');
+            }
+        }
+        
+        // Функция инициализации темы
+        function initTheme() {
+            const themeToggle = document.getElementById('themeToggle');
+            const themeIcon = themeToggle ? themeToggle.querySelector('i') : null;
+            
+            if (!themeToggle || !themeIcon) return;
+            
+            // Проверяем сохраненную тему в localStorage
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') {
+                document.body.classList.add('dark-theme');
                 themeIcon.classList.remove('fa-moon');
                 themeIcon.classList.add('fa-sun');
-                localStorage.setItem('theme', 'dark');
-            } else {
-                themeIcon.classList.remove('fa-sun');
-                themeIcon.classList.add('fa-moon');
-                localStorage.setItem('theme', 'light');
             }
-        });
+            
+            themeToggle.addEventListener('click', () => {
+                document.body.classList.toggle('dark-theme');
+                
+                if (document.body.classList.contains('dark-theme')) {
+                    themeIcon.classList.remove('fa-moon');
+                    themeIcon.classList.add('fa-sun');
+                    localStorage.setItem('theme', 'dark');
+                } else {
+                    themeIcon.classList.remove('fa-sun');
+                    themeIcon.classList.add('fa-moon');
+                    localStorage.setItem('theme', 'light');
+                }
+            });
+        }
+        
+        // Функция инициализации гирлянды
+        function initGarland() {
+            const garlandToggle = document.getElementById('garlandToggle');
+            const garlandContainer = document.getElementById('garlandContainer');
+            
+            if (!garlandToggle || !garlandContainer) return;
+            
+            // Проверяем сохраненную гирлянду в localStorage
+            const savedGarland = localStorage.getItem('garland');
+            if (savedGarland === 'true') {
+                activateGarland();
+            }
+            
+            garlandToggle.addEventListener('click', () => {
+                if (garlandContainer.classList.contains('active')) {
+                    deactivateGarland();
+                } else {
+                    activateGarland();
+                }
+            });
+        }
         
         // Инициализация при загрузке страницы
         window.addEventListener('load', () => {
             resizeCanvas();
             initPetals();
             requestAnimationFrame(animate);
+            
+            // Инициализируем тему и гирлянду
+            initTheme();
+            initGarland();
+            
+            // Обработчик изменения размера окна
+            window.addEventListener('resize', () => {
+                resizeCanvas();
+                // Пересоздаем гирлянду при изменении размера окна
+                const garlandContainer = document.getElementById('garlandContainer');
+                if (garlandContainer && garlandContainer.classList.contains('active')) {
+                    createGarland();
+                }
+            });
+            
+            // Обработчик скролла
+            window.addEventListener('scroll', handleScroll);
         });
-        
-        // Обработчик изменения размера окна
-        window.addEventListener('resize', () => {
-            resizeCanvas();
-        });
-        
-        // Обработчик скролла
-        window.addEventListener('scroll', handleScroll);
     </script>
 </body>
 </html>
