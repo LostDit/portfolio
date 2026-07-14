@@ -1350,26 +1350,26 @@
         }
         
         // Функция инициализации гирлянды
-      //  function initGarland() {
-      //      const garlandToggle = document.getElementById('garlandToggle');
-       //     const garlandContainer = document.getElementById('garlandContainer');
+        function initGarland() {
+            const garlandToggle = document.getElementById('garlandToggle');
+            const garlandContainer = document.getElementById('garlandContainer');
             
-        //    if (!garlandToggle || !garlandContainer) return;
+            if (!garlandToggle || !garlandContainer) return;
             
-            // Проверяем сохраненную гирлянду в localStorage
-         //   const savedGarland = localStorage.getItem('garland');
-         //   if (savedGarland === 'true') {
-          //      activateGarland();
-         //   }
+             Проверяем сохраненную гирлянду в localStorage
+            const savedGarland = localStorage.getItem('garland');
+            if (savedGarland === 'true') {
+                activateGarland();
+            }
             
-         //   garlandToggle.addEventListener('click', () => {
-          //      if (garlandContainer.classList.contains('active')) {
-          //          deactivateGarland();
-           //     } else {
-           //         activateGarland();
-           //     }
-         //   });
-    //    }
+               garlandToggle.addEventListener('click', () => {
+                if (garlandContainer.classList.contains('active')) {
+                    deactivateGarland();
+                } else {
+                    activateGarland();
+                }
+            });
+        }
         
         // Инициализация при загрузке страницы
         window.addEventListener('load', () => {
